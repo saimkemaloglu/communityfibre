@@ -9,12 +9,14 @@ $.ajax({
     url: endpoint,
     success: function(data){
         console.log(data)
+        defaultData = data;
     },
     error: function(error_data){
         console.log("error")
         console.log(error_data)
     }
 })
+
 
 /* function setChart(){
     var ctx = document.getElementById("myChart");

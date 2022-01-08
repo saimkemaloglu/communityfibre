@@ -12,90 +12,149 @@
 </head>
 <body>
     <header>
-        <h1><a href="index">Community Fibre</a></h1>
+        <h1><a href="{% url 'index' %}">Community Fibre</a></h1>
         <ul>
             <li><a href="creation">Service Creation</a></li>
             <li><a href="report">Service Report</a></li>
           </ul>
     </header>
-    <!-- {% for cont in context %}
-    {{cont.key}} - {{cont.value}} <br />
-    {% endfor %} -->
-    <div class='container'>
-        {% block content %}
-        {% endblock content %}
-    </div>
     <p>Below diagrams are just simple representation of service distribution per port</p>
-    <div class='row'>
-        <div class='col-sm-12' >
-            <h1>Hello World</h1>
-            <div class='col-sm-6'>
-                <canvas id="myChart" width="400" height="400"></canvas>
+    <button type="submit" onclick="refreshChart()">Refresh Chart</button>
+    {% block content %}
+    <div class='container'>
+        <h1>Port and Node Charts</h1>
+        <div class='row'>
+            <div class='row'>
+                <div class='col-6 col-sm-12 col-md-6'>
+                    <canvas id="portSapChart" width="400" height="400"></canvas>
+                </div>
+                <div class='col-6 col-sm-12 col-md-6'>
+                    <canvas id="nodeSapChart" width="400" height="400"></canvas>
+                </div>
             </div>
-            <div class='col-sm-6'>
-                <canvas id="myChart2" width="400" height="400"></canvas>
-            </div>
-    
-    
         </div>
     </div>
+    {% endblock content %}
     {% include 'base/js.html '%} 
     {% block javascript %}
     <script>
-      
-    var endpoint = '/api/portData'
-    var defaultData = [2,3,4,5,6,7]
-    var labels = ["a","b","c","d","e","f"];
-    $.ajax({
-    method: "GET",
-    url: endpoint,
-    success: function(data){
-        console.log(data)
-    },
-    error: function(error_data){
-        console.log("error")
-        console.log(error_data)
-    }
-    })
-    
-    var ctx = document.getElementById("myChart");
-
-    var myChart = new Chart(ctx, {
-    type: 'polarArea',
-    data: {
-        labels: labels,
-        datasets: [{
-            label: '# of Votes',
-            data: defaultData,
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255,99,132,1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero:true
+    function refreshChart(){
+        var endpoint = '/api/portData'
+        var portData = []
+        var nodeData = []
+        var portLabels = []
+        var nodeLabels = []
+        $.ajax({
+        method: "GET",
+        url: endpoint,
+        success: function(data){
+            console.log(data)
+            for (const [key, value] of Object.entries(data['port'])) {
+                portLabels.push(key);
+                portData.push(value);
+            }
+            for (const [key, value] of Object.entries(data['node'])) {
+                if(key === "name"){
+                    nodeLabels.push(value);
+                }else if(key === "totalSapCount"){
+                    nodeData.push(value)
                 }
-            }]
+            }
+            // JS - Destroy exiting Chart Instance to reuse <canvas> element
+            let portChartStatus = Chart.getChart("portSapChart"); // <canvas> id
+            if (portChartStatus != undefined) {
+                portChartStatus.destroy();
+            }
+            let nodeChartStatus = Chart.getChart("nodeSapChart"); // <canvas> id
+            if (nodeChartStatus != undefined) {
+                nodeChartStatus.destroy();
+            }
+            //-- End of chart destroy
+            // port chart start  
+            var ctx = document.getElementById("portSapChart");
+            var portSapChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: portLabels,
+                datasets: [{
+                    label: '# of saps',
+                    data: portData,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255,99,132,1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+            });
+            // --- port chart end 
+            // node chart start 
+            var nodeCtx = document.getElementById("nodeSapChart");
+            var portSapChart = new Chart(nodeCtx, {
+            type: 'bar',
+            data: {
+                labels: nodeLabels,
+                datasets: [{
+                    label: '# of saps',
+                    data: nodeData,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255,99,132,1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+            });
+        },
+        error: function(error_data){
+            console.log("error")
+            console.log(error_data)
         }
+    })
+
     }
-});
     </script>
     {% endblock %}
 </body>

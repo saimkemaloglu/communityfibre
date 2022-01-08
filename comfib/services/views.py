@@ -1,14 +1,16 @@
+from django.db import models
 from django.shortcuts import render
 from django.http import HttpResponse,JsonResponse
 from services.srosparser import ServiceSlicing
 import pandas as pd
+from .models import Node,Port,Sap,Service,Sdp,SdpBinding
 
 # Create your views here.
 def index(request):
-    return render(request, 'services/index.html',{'services' :'epipe'})
+    return render(request, 'services/index.html')
 
 def creation(request):
-    return render(request,'services/servicecreation.html',{'services' :'epipe'})
+    return render(request,'services/servicecreation.html')
 
 def report(request):
     return render(request,'services/report.html')
@@ -49,11 +51,14 @@ def getSapPerPort(file):
         # print con[:1000]
         conf = ServiceSlicing(con)
         #print (dir(conf))
+        
         print (conf.host_name())
         print (conf.system_ip_address())
         ## print(conf.sap_list_return())
         ##svc_sect = conf._svc_sect_slice()
         sapList = conf.sap_list_return()
+        nodeSap = {'name':conf.host_name(),'systemIp':conf.system_ip_address(),'totalSapCount':len(sapList)}
         grouped = groupByPortId(sapList)
+        mergedPortAndNode = {'port':grouped,'node':nodeSap}
         ##sapsDetail = {}
-        return grouped
+        return mergedPortAndNode
