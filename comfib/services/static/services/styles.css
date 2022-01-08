@@ -1,0 +1,149 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
+  html {
+    font-family: "Montserrat", sans-serif;
+  }
+  body {
+    background: #eee;
+    padding: 0 16px;
+  }
+  
+  header {
+    background-color: #f5ba13;
+    margin: auto -16px;
+    padding: 16px 32px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
+  }
+
+  header ul{
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+  
+  header li {
+      display: inline;
+    }
+    
+  header h1 {
+    color: #fff;
+    font-family: "McLaren", cursive;
+    font-weight: 200;
+  }
+  
+  footer {
+    position: absolute;
+    text-align: center;
+    bottom: 0;
+    width: 100%;
+    height: 2.5rem;
+  }
+  
+  footer p {
+    color: #ccc;
+  }
+  .note {
+    background: #fff;
+    border-radius: 7px;
+    box-shadow: 0 2px 5px #ccc;
+    padding: 10px;
+    width: 240px;
+    margin: 16px;
+    float: left;
+  }
+  .note h1 {
+    font-size: 1.1em;
+    margin-bottom: 6px;
+  }
+  .note p {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  .card{
+    margin: auto;
+  }
+  .card img{
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 5px solid white;
+    float: right;
+  }
+
+  .card div{
+    width: 400px;
+    height: 150px;
+    border-radius: 5%;
+    float:inline-start;
+    background-color: lightblue ;
+  }
+
+  .textsOfCard{
+    background-color: lemonchiffon;
+    padding: 15px;
+  }
+
+  .numberBox{
+    width: 50px;
+    height: 50px;
+    margin: 5px;
+    border-radius: 20%;
+    align-self: center;
+    text-align: center;
+  }
+  
+  .resultText{
+    color: #f5ba13;
+    font-family: "McLaren", cursive;
+    font-weight: 200;
+    font-size: 1rem;
+  }
+
+  .resultText strong{
+    font-size: 1rem;
+  }
+  .checkButton{
+    width: 100px;
+    height: 50px;
+    margin: 5px;
+    border-radius: 50%;
+    align-self: center;
+    text-align: center;
+    background-color: red;
+  }
+
+  .greenBall{
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: block;
+    flex: 0 0 35px;
+    background-color: yellowgreen;
+    text-align: center;
+    font-size: 20px;
+    border: 1px solid #666;
+  }
+  .yellowBall{
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background-color: yellow;
+    text-align: center;
+    font-size: 20px;
+    border: 1px solid #666;
+  }
+  .redBall{
+    width: 1rem;
+    line-height: 1rem;
+    border-radius: 50%;
+    background-color: red;
+    text-align: center;
+    font-size: 20px;
+    border: 1px solid #666;
+  }
