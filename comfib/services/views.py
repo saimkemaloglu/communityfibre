@@ -1,3 +1,4 @@
+import os
 from django.db import models
 from django.shortcuts import render
 from django.http import HttpResponse,JsonResponse
@@ -16,7 +17,9 @@ def report(request):
     return render(request,'services/report.html')
 
 def get_port_data(request,*args):
-    filepath = 'services/configs/config-rel-10.cfg'
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    print(dir_path)
+    filepath = dir_path + '/configs/'
     data = getSapPerPort(filepath)
     return JsonResponse(data)
 
@@ -39,21 +42,26 @@ def groupByPortId(sapList):
         portMap[port] = 1 """
   portTemp = sorted(portDict, key=portDict.get, reverse=True)
   returnDict = {}
-  for i in range(0,10):
-    returnDict[portTemp[i]] = portDict[portTemp[i]]
+  if len(portTemp) > 10:
+    for i in range(0,10):
+      returnDict[portTemp[i]] = portDict[portTemp[i]]
+  else:
+    for i in range(0,len(portTemp)):
+      returnDict[portTemp[i]] = portDict[portTemp[i]]
     
   if returnDict:
     return returnDict
 
-def getSapPerPort(file):
-    with open(file) as f:
+def getSapPerPort(folder):
+  wholeThing = {}
+  listDir = os.listdir(folder)
+  dir_path = os.path.dirname(os.path.realpath(__file__))
+  for file in listDir:
+    with open(dir_path+"/configs/"+file) as f:
         con = f.read()
-        # print con[:1000]
         conf = ServiceSlicing(con)
-        #print (dir(conf))
-        
-        print (conf.host_name())
-        print (conf.system_ip_address())
+        #print (conf.host_name())
+        #print (conf.system_ip_address())
         ## print(conf.sap_list_return())
         ##svc_sect = conf._svc_sect_slice()
         sapList = conf.sap_list_return()
@@ -61,4 +69,6 @@ def getSapPerPort(file):
         grouped = groupByPortId(sapList)
         mergedPortAndNode = {'port':grouped,'node':nodeSap}
         ##sapsDetail = {}
-        return mergedPortAndNode
+    wholeThing[file]= mergedPortAndNode
+  print(wholeThing)  
+  return wholeThing

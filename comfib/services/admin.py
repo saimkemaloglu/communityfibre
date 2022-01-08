@@ -28,5 +28,31 @@ class PortAdmin(admin.ModelAdmin):
     ]
 
     list_display = ('port_name','node_id')
+    search_fields = ['port_name']
 
 admin.site.register(Port,PortAdmin)
+
+class ServiceAdmin(admin.ModelAdmin):
+    fieldsets = [
+        ("Service ID",{'fields':['service_id_str']}),
+        ("Node",{'fields':['node_id']})
+    ]
+
+    list_display = ('service_id_str','node_id')
+    search_fields = ['service_id_str']
+
+admin.site.register(Service,ServiceAdmin)
+
+class SapAdmin(admin.ModelAdmin):
+    fieldsets = [
+        ("Node",{'fields':['node_id']}),
+        ("Service Id",{'fields':['service_id']}),
+        ("Port",{'fields':['port']}),
+        ("Outer Vlan",{'fields':['outer_vlan']}),
+        ("Inner Vlan",{'fields':['inner_vlan']})
+    ]
+
+    list_display = ('service_id','outer_vlan','inner_vlan')
+    search_fields = ['service_id']
+
+admin.site.register(Sap,SapAdmin)

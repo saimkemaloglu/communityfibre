@@ -27,7 +27,7 @@ class Service(models.Model):
     node_id = models.ForeignKey(Node, on_delete=CASCADE)
 
     def __str__(self):
-        return "Service: " + self.service_id_str
+        return "Service: " + str(self.service_id_str)
 
 
 class Sap(models.Model):

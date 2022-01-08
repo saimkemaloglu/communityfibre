@@ -19,17 +19,21 @@
           </ul>
     </header>
     <p>Below diagrams are just simple representation of service distribution per port</p>
+    <label for="files">Choose a node config file to generate reports:</label>
+    <select name="files" id="files">
+        <option value="none">----</option>
+    </select>
     <button type="submit" onclick="refreshChart()">Refresh Chart</button>
     {% block content %}
     <div class='container'>
-        <h1>Port and Node Charts</h1>
+        <h1>Node and Port Charts</h1>
         <div class='row'>
             <div class='row'>
                 <div class='col-6 col-sm-12 col-md-6'>
-                    <canvas id="portSapChart" width="400" height="400"></canvas>
+                    <canvas id="nodeSapChart" width="400" height="400"></canvas>
                 </div>
                 <div class='col-6 col-sm-12 col-md-6'>
-                    <canvas id="nodeSapChart" width="400" height="400"></canvas>
+                    <canvas id="portSapChart" width="400" height="400"></canvas>
                 </div>
             </div>
         </div>
@@ -38,7 +42,24 @@
     {% include 'base/js.html '%} 
     {% block javascript %}
     <script>
+    
+    $.ajax({
+        method: "GET",
+        url: '/api/portData',
+        success: function(data){
+            for(key in data){
+                $('<option>').val(key).text(key).appendTo('#files');
+            }
+        },error: function(error_data){
+            console.log("error")
+            console.log(error_data)
+        }
+    });
+
+    
+
     function refreshChart(){
+        var fileName = $('#files').find(":selected").text();
         var endpoint = '/api/portData'
         var portData = []
         var nodeData = []
@@ -48,18 +69,22 @@
         method: "GET",
         url: endpoint,
         success: function(data){
+            dataPort = data[fileName]
             console.log(data)
-            for (const [key, value] of Object.entries(data['port'])) {
+            for (const [key, value] of Object.entries(dataPort['port'])) {
                 portLabels.push(key);
                 portData.push(value);
             }
-            for (const [key, value] of Object.entries(data['node'])) {
-                if(key === "name"){
-                    nodeLabels.push(value);
-                }else if(key === "totalSapCount"){
-                    nodeData.push(value)
+            for(const[keyy,valuee] of Object.entries(data)){
+                for (const [key, value] of Object.entries(valuee['node'])) {
+                    if(key === "name"){
+                        nodeLabels.push(value);
+                    }else if(key === "totalSapCount"){
+                        nodeData.push(value)
+                    }
                 }
             }
+            
             // JS - Destroy exiting Chart Instance to reuse <canvas> element
             let portChartStatus = Chart.getChart("portSapChart"); // <canvas> id
             if (portChartStatus != undefined) {
