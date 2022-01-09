@@ -1,10 +1,12 @@
 import os
 from django.db import models
-from django.shortcuts import render
+from django.db.models.query import RawQuerySet
+from django.shortcuts import redirect, render
 from django.http import HttpResponse,JsonResponse
 from services.srosparser import ServiceSlicing
 import pandas as pd
 from .models import Node,Port,Sap,Service,Sdp,SdpBinding
+from django.core import serializers
 
 # Create your views here.
 def index(request):
@@ -12,6 +14,29 @@ def index(request):
 
 def creation(request):
     return render(request,'services/servicecreation.html')
+
+def createEline(request):
+  if request.method == 'POST':
+    nodeA = list(Node.objects.filter(node_id=request.POST['NodeA']).values_list('system_ip',flat=True))[0]
+    nodeB = list(Node.objects.filter(node_id=request.POST['NodeB']).values_list('system_ip',flat=True))[0]
+    portA = list(Port.objects.filter(node_id=int(request.POST['NodeA']),id=int(request.POST['PortA'])).values_list('port_name',flat=True))[0]
+    portB = list(Port.objects.filter(node_id=int(request.POST['NodeB']),id=int(request.POST['PortB'])).values_list('port_name',flat=True))[0]
+    print ("node a:"+nodeA+" nodeB:"+ nodeB + "a: "+portA + "b: "+portB)
+    data = {
+      'node_a': nodeA,
+      'node_b': nodeB,
+      'port_a': portA,
+      'port_b': portB,
+      'vlana':request.POST['VlanA'],
+      'vlanb':request.POST['VlanB'],
+      'serviceId':request.POST['ServiceId'],
+      'sdpa':request.POST['sdpAB'],
+      'sdpb':request.POST['sdpBA'],
+      'vcid':request.POST['vcId'],
+    }
+    return render(request,'services/createEline.html',data)
+  else:
+    return redirect('services:creation')
 
 def report(request):
     return render(request,'services/report.html')
@@ -23,6 +48,18 @@ def get_port_data(request,*args):
     data = getSapPerPort(filepath)
     return JsonResponse(data)
 
+def get_node_ports(request,node_id):
+  ports = Port.objects.filter(node_id=node_id).values()
+  return JsonResponse(list(ports),safe=False)
+
+def get_node_sdps(request,node_id):
+  sdps = Sdp.objects.filter(from_node_id=node_id).values()
+  return JsonResponse(list(sdps),safe=False)
+
+def get_nodes(request):
+  #nodes = Node.objects.all()
+  #data = serializers.serialize('json', nodes)
+  return JsonResponse(list(Node.objects.all().values()), safe=False)
 
 
 def groupByPortId(sapList):
@@ -60,10 +97,6 @@ def getSapPerPort(folder):
     with open(dir_path+"/configs/"+file) as f:
         con = f.read()
         conf = ServiceSlicing(con)
-        #print (conf.host_name())
-        #print (conf.system_ip_address())
-        ## print(conf.sap_list_return())
-        ##svc_sect = conf._svc_sect_slice()
         sapList = conf.sap_list_return()
         nodeSap = {'name':conf.host_name(),'systemIp':conf.system_ip_address(),'totalSapCount':len(sapList)}
         grouped = groupByPortId(sapList)

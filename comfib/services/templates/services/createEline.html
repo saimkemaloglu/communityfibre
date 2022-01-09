@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>ComFib Interview</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' href="{% static 'services/styles.css' %}">
+    <!-- <script src='main.js'></script> -->
+    {% include 'base/css.html' %}
+    {% include 'base/js.html' %}
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="{% url 'services:index' %}">Community Fibre Interview Showcase</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+        <li class="nav-item active">
+            <a class="nav-link" href="{% url 'services:creation' %}"><span class="sr-only">(current)</span>Service Creation </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'services:report' %}">Service Report</a>
+        </li>
+        </ul>
+    </div>
+</nav>
+    <h2 style="align-self: center;" >You can copy and paste below config to corresponding nodes for service creation</h2>
+    <div class='container'>
+      <div class='row'>
+              <div class='col-6 col-sm-12 col-md-6'>
+                <h3>{{node_a}}</h3>
+                <div>
+                  <p>configure port {{port_a}}</p>
+                  <p>&emsp;ethernet</p>
+                  <p>&emsp;&emsp;mode access</p>
+                  <p>&emsp;&emsp;encap-type dot1q</p>
+                  <p>&emsp;&emsp;exit</p>
+                  <p>&emsp;no shutdown&emsp;</p>   
+                </div>
+                <div>
+                    <p>configure service epipe {{serviceId}} customer 1 create</p>
+                    <p>&emsp;sap  {{port_a}}:{{vlana}} create</p>
+                    <p>&emsp;&emsp;no shutdown</p>
+                    <p>&emsp;&emsp;exit</p>
+                    <p>&emsp;spoke-sdp  {{sdpa}}:{{vcid}} create&emsp;</p>
+                    <p>&emsp;&emsp;no shutdown&emsp;</p>
+                    <p>&emsp;&emsp;exit</p>
+                    <p>&emsp;no shutdown&emsp;</p> 
+                </div>
+              </div>
+              <div class='col-6 col-sm-12 col-md-6'>
+                <h3>{{node_b}}</h3>
+                <div>
+                  <p>configure port {{port_b}}</p>
+                  <p>&emsp;ethernet</p>
+                  <p>&emsp;&emsp;mode access</p>
+                  <p>&emsp;&emsp;encap-type dot1q</p>
+                  <p>&emsp;&emsp;exit</p>
+                  <p>&emsp;no shutdown&emsp;</p>   
+                </div>
+                <div>
+                  <p>configure service epipe {{serviceId}} customer 1 create</p>
+                  <p>&emsp;sap  {{port_b}}:{{vlanb}}</p>
+                  <p>&emsp;&emsp;no shutdown</p>
+                  <p>&emsp;&emsp;exit</p>
+                  <p>&emsp;spoke-sdp  {{sdpb}}:{{vcid}} create&emsp;</p>
+                  <p>&emsp;&emsp;no shutdown&emsp;</p>
+                  <p>&emsp;&emsp;exit</p>
+                  <p>&emsp;no shutdown</p>
+              </div>
+              </div>
+          </div>
+  </div>
+    {% include 'base/js.html '%} 
+    {% block javascript %}
+    <script>
+    </script>
+    {% endblock %}
+</body>
+</html> 

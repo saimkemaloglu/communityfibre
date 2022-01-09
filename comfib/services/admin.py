@@ -43,6 +43,18 @@ class ServiceAdmin(admin.ModelAdmin):
 
 admin.site.register(Service,ServiceAdmin)
 
+class SdpAdmin(admin.ModelAdmin):
+    fieldsets = [
+        ("From Node",{'fields':['from_node']}),
+        ("To Node",{'fields':['to_node']}),
+        ("ID",{'fields':['sdp_id']}),
+    ]
+
+    list_display = ('from_node','to_node','sdp_id')
+    search_fields = ['from_node','to_node']
+
+admin.site.register(Sdp,SdpAdmin)
+
 class SapAdmin(admin.ModelAdmin):
     fieldsets = [
         ("Node",{'fields':['node_id']}),

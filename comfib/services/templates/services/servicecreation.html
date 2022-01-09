@@ -11,16 +11,176 @@
     {% include 'base/css.html' %}
 </head>
 <body>
-    <header>
-        <h1><a href="{% url 'index' %}">Community Fibre</a></h1>
-        <ul>
-            <li><a href="creation">Service Creation</a></li>
-            <li><a href="report">Service Report</a></li>
-          </ul>
-    </header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="{% url 'services:index' %}">Community Fibre Interview Showcase</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'services:creation' %}"><span class="sr-only">(current)</span>Service Creation </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'services:report' %}">Service Report</a>
+            </li>
+            </ul>
+        </div>
+    </nav>
     <!-- {% if services == 'epipe' %}
     <p>Welcome to service creation is found</p>
     {% endif %} -->
     <p>Please select below to create simple eline service between to nodes.</p>
+    <form action="{% url 'services:createEline' %}" method="post">
+        {% csrf_token %}
+        <div class="form-group row">
+          <label class="col-4 col-form-label" for="NodeA">Node A</label> 
+          <div class="col-8">
+            <select id="NodeA" name="NodeA" class="custom-select" required="required" onchange="populatePorts(this,'A')">
+                <option value="0">Please select a Node</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="NodeB" class="col-4 col-form-label">Node B</label> 
+          <div class="col-8">
+            <select id="NodeB" name="NodeB" class="custom-select" required="required" onchange="populatePorts(this,'B')">
+                <option value="0">Please select a Node</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group row">
+            <label for="ServiceId" class="col-4 col-form-label">Service Id</label> 
+            <div class="col-8">
+              <input type="number" id="ServiceId" min="0" name="ServiceId" class="form-control" required="required">
+            </div>
+          </div>
+        <div class="form-group row">
+          <label for="PortA" class="col-4 col-form-label">Port A</label> 
+          <div class="col-8">
+            <select id="PortA" name="PortA" class="custom-select" required="required" ></select>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="PortB" class="col-4 col-form-label">Port B</label> 
+          <div class="col-8">
+            <select id="PortB" name="PortB" class="custom-select" required="required"></select>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-4 col-form-label" for="VlanA">Vlan A</label> 
+          <div class="col-8">
+            <input id="VlanA" name="VlanA" type="number" max="4095" min="0" class="form-control" required="required">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="VlanB" class="col-4 col-form-label">Vlan B</label> 
+          <div class="col-8">
+            <input id="VlanB" name="VlanB" type="number" max="4095" min="0" class="form-control" required="required">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="sdpAB" class="col-4 col-form-label">SDP A to B</label> 
+          <div class="col-8">
+            <select id="sdpAB" name="sdpAB"  class="custom-select" required="required"></select>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="sdpBA" class="col-4 col-form-label">SDP B to A</label> 
+          <div class="col-8">
+            <select id="sdpBA" name="sdpBA" class="custom-select" required="required"></select>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="vcId" class="col-4 col-form-label">vcID</label> 
+          <div class="col-8">
+            <input id="vcId" name="vcId" type="text" class="form-control" required="required">
+          </div>
+        </div>
+        <div class="form-group row">
+            <div class="offset-4 col-8">
+              <button name="submit" type="submit" class="btn btn-primary">Submit</button>
+            </div>
+          </div>
+      </form>
+    {% include 'base/js.html '%} 
+    {% block javascript %}
+    <script>
+        $.ajax({
+            method: "GET",
+            url: '/api/nodes',
+            success: function(data){
+                console.log(data)
+                    for(key in data){
+                        $('<option>').val(data[key].node_id).text(data[key].node_name + ":"+ data[key].system_ip).appendTo('#NodeA');
+                        $('<option>').val(data[key].node_id).text(data[key].node_name + ":"+ data[key].system_ip).appendTo('#NodeB');
+                    }
+            },error: function(error_data){
+                console.log("error")
+                console.log(error_data)
+            }
+        });
+
+    function populatePorts(node_id,field){
+        console.log(node_id.value)
+        $("#Port"+field).empty();
+        $.ajax({
+            method: "GET",
+            url: '/api/'+node_id.value+'/ports',
+            success: function(data){
+                console.log(data)
+                    for(key in data){
+                        $('<option>').val(data[key].id).text(data[key].port_name).appendTo('#Port'+field);
+                    }
+            },error: function(error_data){
+                console.log("error")
+                console.log(error_data)
+            }
+        });
+
+        if($('#NodeA').val() !== "0" && $('#NodeB').val() !== "0"){
+            var nodeAId = $('#NodeA').val();
+            console.log(nodeAId)
+            var nodeBId = $('#NodeB').val();
+            console.log(nodeBId)
+            $("#sdpAB").empty();
+            $("#sdpBA").empty();
+            $.ajax({
+                method: "GET",
+                url: '/api/'+nodeAId+'/sdps',
+                success: function(data){
+                    console.log(data)
+                        for(key in data){
+                            if(data[key].to_node_id == nodeBId){
+                                $('<option>').val(data[key].sdp_id).text(data[key].sdp_id).appendTo('#sdpAB');
+                            }  
+                        }
+                },error: function(error_data){
+                    console.log("error")
+                    console.log(error_data)
+                }
+            });
+            
+            $.ajax({
+                method: "GET",
+                url: '/api/'+nodeBId+'/sdps',
+                success: function(data){
+                    console.log(data)
+                        for(key in data){
+                            if(data[key].to_node_id == nodeAId){
+                                $('<option>').val(data[key].sdp_id).text(data[key].sdp_id).appendTo('#sdpBA');
+                            }  
+                        }
+                },error: function(error_data){
+                    console.log("error")
+                    console.log(error_data)
+                }
+            });
+
+        }
+    }
+
+    </script>
+    {% endblock %}
 </body>
 </html> 

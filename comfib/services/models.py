@@ -39,7 +39,8 @@ class Sap(models.Model):
 
 
 class Sdp(models.Model):
-    node_id = models.ForeignKey(Node, on_delete=models.CASCADE)
+    from_node = models.ForeignKey(Node, related_name="from_node_id", on_delete=models.CASCADE)
+    to_node = models.ForeignKey(Node,on_delete=models.CASCADE,related_name="to_node_id")
     sdp_id = models.IntegerField(primary_key=True)
 
 class SdpBinding(models.Model):

@@ -45,6 +45,24 @@
   footer p {
     color: #ccc;
   }
+
+  div.zerospace {
+    color: #000000;
+    font-family: "Times New Roman";
+    font-size: 2.0pt;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: normal;
+    margin-bottom: 0pt;
+    margin-left: 0pt;
+    margin-right: 0pt;
+    margin-top: 0pt;
+    text-align: Left;
+    text-indent: 0pt;
+    text-transform: none;
+    vertical-align: baseline;
+}
+
   .note {
     background: #fff;
     border-radius: 7px;
