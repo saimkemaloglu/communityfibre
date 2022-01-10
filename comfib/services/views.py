@@ -7,6 +7,7 @@ from services.srosparser import ServiceSlicing
 import pandas as pd
 from .models import Node,Port,Sap,Service,Sdp,SdpBinding
 from django.core import serializers
+from django.views import generic
 
 # Create your views here.
 def index(request):
@@ -15,10 +16,14 @@ def index(request):
 def creation(request):
     return render(request,'services/servicecreation.html')
 
+class AllView(generic.DetailView):
+    model = Node
+    template_name = 'services/all.html'
+
 def createEline(request):
   if request.method == 'POST':
-    nodeA = list(Node.objects.filter(node_id=request.POST['NodeA']).values_list('system_ip',flat=True))[0]
-    nodeB = list(Node.objects.filter(node_id=request.POST['NodeB']).values_list('system_ip',flat=True))[0]
+    nodeA = list(Node.objects.filter(id=request.POST['NodeA']).values_list('system_ip',flat=True))[0]
+    nodeB = list(Node.objects.filter(id=request.POST['NodeB']).values_list('system_ip',flat=True))[0]
     portA = list(Port.objects.filter(node_id=int(request.POST['NodeA']),id=int(request.POST['PortA'])).values_list('port_name',flat=True))[0]
     portB = list(Port.objects.filter(node_id=int(request.POST['NodeB']),id=int(request.POST['PortB'])).values_list('port_name',flat=True))[0]
     print ("node a:"+nodeA+" nodeB:"+ nodeB + "a: "+portA + "b: "+portB)
@@ -34,6 +39,49 @@ def createEline(request):
       'sdpb':request.POST['sdpBA'],
       'vcid':request.POST['vcId'],
     }
+    serviceA = Service(
+      id = request.POST['NodeA'] + request.POST['ServiceId'],
+      service_id_str =request.POST['ServiceId'],
+      node_id = Node.objects.get(id=request.POST['NodeA'])
+    )
+    serviceA.save()
+    serviceB = Service(
+      id= request.POST['NodeB'] + request.POST['ServiceId'],
+      service_id_str = request.POST['ServiceId'],
+      node_id = Node.objects.get(id=request.POST['NodeB'])
+    )
+    serviceB.save()
+
+    sapA = Sap(
+      port = Port.objects.get(id=request.POST['PortA']),
+      service_id = Service.objects.get(id=request.POST['NodeA'] + request.POST['ServiceId']),
+      outer_vlan = request.POST['VlanA'],
+      inner_vlan = 0
+    )
+
+    sapA.save()
+
+    sapB = Sap(
+      port = Port.objects.get(id=request.POST['PortB']),
+      service_id = Service.objects.get(id=request.POST['NodeB'] + request.POST['ServiceId']),
+      outer_vlan = request.POST['VlanB'],
+      inner_vlan = 0
+    )
+    sapB.save()
+
+    sdpA = SdpBinding(
+      sdp_id = Sdp.objects.get(id=request.POST['sdpAB']),
+      vc_id = request.POST['vcId'],
+      service = Service.objects.get(id=request.POST['NodeA'] + request.POST['ServiceId']),
+    )
+    sdpA.save()
+    sdpB = SdpBinding(
+      sdp_id = Sdp.objects.get(id=request.POST['sdpBA']),
+      vc_id = request.POST['vcId'],
+      service = Service.objects.get(id=request.POST['NodeA'] + request.POST['ServiceId']),
+    )
+    sdpB.save()
+
     return render(request,'services/createEline.html',data)
   else:
     return redirect('services:creation')

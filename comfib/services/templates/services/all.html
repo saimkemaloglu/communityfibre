@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>ComFib Interview</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' href="{% static 'services/styles.css' %}">
+    <!-- <script src='main.js'></script> -->
+    {% include 'base/css.html' %}
+    {% include 'base/js.html' %}
+</head>
+<body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-left" href="{% url 'services:index' %}"><img src="{% static 'services/img/community-fibre-1.png' %}" height="80px" width="80px"></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'services:creation' %}"><span class="sr-only">(current)</span>Service Creation </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'services:report' %}">Service Report</a>
+                </li>
+                </ul>
+            </div>
+        </nav>
+    {% if node %}
+    <div class="container">
+        <h2>Node {{ node.node_name }} Preview</h2>
+        <button type="button" class="btn btn-secondary col-12" data-toggle="collapse" data-target="#ports">Ports</button>
+        <div id="ports" class="collapse in col-12">
+            <ul>
+                {% for port in node.ports.all %}
+                <li><p>{{port}} </p>
+                {% if port.saps.all %}
+                <button type="button" class="btn btn-secondary col-3" data-toggle="collapse" data-target="#saps">Port Saps</button>
+                <div id="saps" class="collapse in">
+                    <ul>    
+                    {% for sap in port.saps.all%}
+                    <li><p>{{sap}} </p></li>
+                    {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <button type="button" class="btn btn-secondary col-12" data-toggle="collapse" data-target="#services">Services</button>
+        <div id="services" class="collapse in col-12">
+            <ul>
+            {% for service in node.services.all %}
+            <li><p>{{service}} </p>
+            {% if service.saps.all %}
+            <button type="button" class="btn btn-secondary col-3" data-toggle="collapse" data-target="#serviceSaps">Service Saps</button>
+            <div id="serviceSaps" class="collapse in col-6">
+                <ul>    
+                {% for sap in service.saps.all%}
+                <li><p>{{sap}} </p></li>
+                {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            {% if service.sdp_bindings.all %}
+            <button type="button" class="btn btn-secondary col-3" data-toggle="collapse" data-target="#serviceSdp">Service Sdps</button>
+            <div id="serviceSdp" class="collapse in col-6">
+                <ul>    
+                {% for sdp in service.sdp_bindings.all%}
+                <li><p>{{sdp}} </p></li>
+                {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            </li>
+            {% endfor %}
+            </ul>
+        </div>
+      </div>
+    {% else %}
+        <p>No  nodes are available.</p>
+    {% endif %}
+
+   
+</body>
+</html> 

@@ -7,6 +7,7 @@ urlpatterns = [
     path('creation',views.creation,name='creation'),
     path('createEline',views.createEline,name='createEline'),
     path('report',views.report,name='report'),
+    path('all/<int:pk>',views.AllView.as_view(),name='all'),
     path('api/portData',views.get_port_data,name='port_data'),
     path('api/nodes',views.get_nodes,name='get_nodes'),
     path('api/<int:node_id>/ports/',views.get_node_ports,name='get_node_ports'),

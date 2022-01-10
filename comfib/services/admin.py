@@ -47,24 +47,33 @@ class SdpAdmin(admin.ModelAdmin):
     fieldsets = [
         ("From Node",{'fields':['from_node']}),
         ("To Node",{'fields':['to_node']}),
-        ("ID",{'fields':['sdp_id']}),
+        ("ID",{'fields':['id']}),
     ]
 
-    list_display = ('from_node','to_node','sdp_id')
+    list_display = ('from_node','to_node','id')
     search_fields = ['from_node','to_node']
 
 admin.site.register(Sdp,SdpAdmin)
 
 class SapAdmin(admin.ModelAdmin):
     fieldsets = [
-        ("Node",{'fields':['node_id']}),
         ("Service Id",{'fields':['service_id']}),
         ("Port",{'fields':['port']}),
         ("Outer Vlan",{'fields':['outer_vlan']}),
-        ("Inner Vlan",{'fields':['inner_vlan']})
+        ("Inner Vlan",{'fields':['inner_vlan']}),
     ]
 
-    list_display = ('service_id','outer_vlan','inner_vlan')
-    search_fields = ['service_id']
+    list_display = ('service_id','port','outer_vlan','inner_vlan')
 
 admin.site.register(Sap,SapAdmin)
+
+class SdpBindingAdmin(admin.ModelAdmin):
+    fieldsets = [
+        ("Service Id",{'fields':['service']}),
+        ("Sdp Tunnel",{'fields':['sdp_id']}),
+        ("VcId",{'fields':['vc_id']}),
+    ]
+
+    list_display = ('service','sdp_id','vc_id')
+
+admin.site.register(SdpBinding,SdpBindingAdmin)

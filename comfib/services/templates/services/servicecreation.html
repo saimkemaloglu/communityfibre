@@ -12,7 +12,7 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="{% url 'services:index' %}">Community Fibre Interview Showcase</a>
+        <a class="navbar-left" href="{% url 'services:index' %}"><img src="{% static 'services/img/community-fibre-1.png' %}" height="80px" width="80px"></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -99,7 +99,7 @@
         </div>
         <div class="form-group row">
             <div class="offset-4 col-8">
-              <button name="submit" type="submit" class="btn btn-primary">Submit</button>
+              <button name="submit" type="submit" class="btn btn-secondary">Submit</button>
             </div>
           </div>
       </form>
@@ -112,8 +112,8 @@
             success: function(data){
                 console.log(data)
                     for(key in data){
-                        $('<option>').val(data[key].node_id).text(data[key].node_name + ":"+ data[key].system_ip).appendTo('#NodeA');
-                        $('<option>').val(data[key].node_id).text(data[key].node_name + ":"+ data[key].system_ip).appendTo('#NodeB');
+                        $('<option>').val(data[key].id).text(data[key].node_name + ":"+ data[key].system_ip).appendTo('#NodeA');
+                        $('<option>').val(data[key].id).text(data[key].node_name + ":"+ data[key].system_ip).appendTo('#NodeB');
                     }
             },error: function(error_data){
                 console.log("error")
@@ -152,7 +152,7 @@
                     console.log(data)
                         for(key in data){
                             if(data[key].to_node_id == nodeBId){
-                                $('<option>').val(data[key].sdp_id).text(data[key].sdp_id).appendTo('#sdpAB');
+                                $('<option>').val(data[key].id).text(data[key].id).appendTo('#sdpAB');
                             }  
                         }
                 },error: function(error_data){
@@ -168,7 +168,7 @@
                     console.log(data)
                         for(key in data){
                             if(data[key].to_node_id == nodeAId){
-                                $('<option>').val(data[key].sdp_id).text(data[key].sdp_id).appendTo('#sdpBA');
+                                $('<option>').val(data[key].id).text(data[key].id).appendTo('#sdpBA');
                             }  
                         }
                 },error: function(error_data){

@@ -13,7 +13,7 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="{% url 'services:index' %}">Community Fibre Interview Showcase</a>
+        <a class="navbar-left" href="{% url 'services:index' %}"><img src="{% static 'services/img/community-fibre-1.png' %}" height="80px" width="80px"></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -34,7 +34,7 @@
         <select name="files" id="files">
             <option value="none">----</option>
         </select>
-        <button type="submit" class="btn-primary" onclick="refreshChart()">Get Chart</button>
+        <button type="submit" class="btn-secondary" onclick="refreshChart()">Get Chart</button>
     </div>
     
     {% block content %}
