@@ -28,6 +28,32 @@
                 </ul>
             </div>
         </nav>
-    <p>This website is just to show some talent for interview</p>
+    <div class="container">
+    <p>This website is created as weekend project to show some talent for Community Fibre interview</p>
+    <button type="button" class="btn btn-secondary col-4" data-toggle="collapse" data-target="#techUsed">Tech Used</button>
+    <div id="techUsed" class="collapse in col-12">
+    <p>CSS,JS,Ajax</p>
+    <p>Relational DB Creation</p>
+    <p>Python. Django + Parser Module</p>
+    <p>Simple API</p>
+    <p>Developed related to Network Domain</p>
+    <p>Dockerized</p>
+    </div>
+    </div>
+    {% if nodes %}
+    <div class="row" style="padding-top: 3rem;">
+    {% for node in nodes %}
+      <div class="col-sm-12 col-lg-3 col-md-6">
+        <div class="card text-white bg-dark">
+        <div class="card-body text-white bg-dark">
+            <h5 class="card-title">Node:{{ node.node_name}} IP:{{ node.system_ip}}</h5>
+            <p class="card-text">See port and service details of {{ node.node_name}}</p>
+            <a href="all/{{node.id}}" class="btn btn-secondary">Check inventory on node!</a>
+        </div>
+      </div>
+      </div>
+    {% endfor %}
+    </div>
+    {% endif %}
 </body>
 </html> 

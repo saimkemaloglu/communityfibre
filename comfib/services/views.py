@@ -1,17 +1,14 @@
 import os
-from django.db import models
-from django.db.models.query import RawQuerySet
 from django.shortcuts import redirect, render
 from django.http import HttpResponse,JsonResponse
 from services.srosparser import ServiceSlicing
-import pandas as pd
 from .models import Node,Port,Sap,Service,Sdp,SdpBinding
-from django.core import serializers
 from django.views import generic
 
 # Create your views here.
 def index(request):
-    return render(request, 'services/index.html')
+    nodes = list(Node.objects.all().values())
+    return render(request, 'services/index.html',{'nodes':nodes })
 
 def creation(request):
     return render(request,'services/servicecreation.html')

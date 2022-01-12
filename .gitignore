@@ -1,2 +1,3 @@
 services/configs/*
 **/configs/
+**/__pycache_

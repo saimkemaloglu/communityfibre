@@ -33,49 +33,53 @@
       <div class='row'>
               <div class='col-6 col-sm-12 col-md-6'>
                 <h3>{{node_a}}</h3>
+                <h4>Port Config</h4>
                 <div>
-                  <p>configure port {{port_a}}</p>
-                  <p>&emsp;ethernet</p>
-                  <p>&emsp;&emsp;mode access</p>
-                  <p>&emsp;&emsp;encap-type dot1q</p>
-                  <p>&emsp;&emsp;exit</p>
-                  <p>&emsp;no shutdown&emsp;</p>   
-                </div>
-                <div>
-                    <p>configure service epipe {{serviceId}} customer 1 create</p>
-                    <p>&emsp;sap  {{port_a}}:{{vlana}} create</p>
-                    <p>&emsp;&emsp;no shutdown</p>
-                    <p>&emsp;&emsp;exit</p>
-                    <p>&emsp;spoke-sdp  {{sdpa}}:{{vcid}} create&emsp;</p>
-                    <p>&emsp;&emsp;no shutdown&emsp;</p>
-                    <p>&emsp;&emsp;exit</p>
-                    <p>&emsp;no shutdown&emsp;</p> 
-                </div>
+                  <pre>configure port {{port_a}}</pre>
+                  <pre> ethernet</pre>
+                  <pre>   mode access</pre>
+                  <pre>   encap-type dot1q</pre>
+                  <pre>   exit</pre>
+                  <pre> no shutdown </pre>
+              </div>
+              <h4>Service Config</h4>
+              <div>
+                <pre>configure service epipe {{serviceId}} customer 1 create</pre>
+                <pre>sap  {{port_a}}:{{vlana}} create</pre>
+                <pre> no shutdown</pre>
+                <pre> exit</pre>
+                <pre>spoke-sdp  {{sdpa}}:{{vcid}} create</pre>
+                <pre> no shutdown</pre>
+                <pre> exit</pre>
+                <pre>no shutdown</pre>
+              </div>
               </div>
               <div class='col-6 col-sm-12 col-md-6'>
                 <h3>{{node_b}}</h3>
+                <h4>Port Config</h4>
                 <div>
-                  <p>configure port {{port_b}}</p>
-                  <p>&emsp;ethernet</p>
-                  <p>&emsp;&emsp;mode access</p>
-                  <p>&emsp;&emsp;encap-type dot1q</p>
-                  <p>&emsp;&emsp;exit</p>
-                  <p>&emsp;no shutdown&emsp;</p>   
+                    <pre>configure port {{port_b}}</pre>
+                    <pre> ethernet</pre>
+                    <pre>   mode access</pre>
+                    <pre>   encap-type dot1q</pre>
+                    <pre>   exit</pre>
+                    <pre> no shutdown </pre>
                 </div>
+                <h4>Service Config</h4>
                 <div>
-                  <p>configure service epipe {{serviceId}} customer 1 create</p>
-                  <p>&emsp;sap  {{port_b}}:{{vlanb}}</p>
-                  <p>&emsp;&emsp;no shutdown</p>
-                  <p>&emsp;&emsp;exit</p>
-                  <p>&emsp;spoke-sdp  {{sdpb}}:{{vcid}} create&emsp;</p>
-                  <p>&emsp;&emsp;no shutdown&emsp;</p>
-                  <p>&emsp;&emsp;exit</p>
-                  <p>&emsp;no shutdown</p>
-              </div>
+                  <pre>configure service epipe {{serviceId}} customer 1 create</pre>
+                  <pre>sap  {{port_b}}:{{vlanb}} create</pre>
+                  <pre> no shutdown</pre>
+                  <pre> exit</pre>
+                  <pre>spoke-sdp  {{sdpb}}:{{vcid}} create</pre>
+                  <pre> no shutdown</pre>
+                  <pre> exit</pre>
+                  <pre>no shutdown</pre>
+                </div>
               </div>
           </div>
   </div>
-    {% include 'base/js.html '%} 
+    {% include 'base/js.html' %} 
     {% block javascript %}
     <script>
     </script>

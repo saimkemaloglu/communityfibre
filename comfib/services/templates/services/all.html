@@ -37,8 +37,8 @@
                 {% for port in node.ports.all %}
                 <li><p>{{port}} </p>
                 {% if port.saps.all %}
-                <button type="button" class="btn btn-secondary col-3" data-toggle="collapse" data-target="#saps">Port Saps</button>
-                <div id="saps" class="collapse in">
+                <button type="button" class="btn btn-secondary col-3 btn-sm" data-toggle="collapse" data-target="#saps{{ port.id }}">Port Saps</button>
+                <div id="saps{{ port.id }}" class="collapse in">
                     <ul>    
                     {% for sap in port.saps.all%}
                     <li><p>{{sap}} </p></li>
@@ -56,8 +56,8 @@
             {% for service in node.services.all %}
             <li><p>{{service}} </p>
             {% if service.saps.all %}
-            <button type="button" class="btn btn-secondary col-3" data-toggle="collapse" data-target="#serviceSaps">Service Saps</button>
-            <div id="serviceSaps" class="collapse in col-6">
+            <button type="button" class="btn btn-secondary col-3 btn-sm" data-toggle="collapse" data-target="#serviceSaps{{service.id}}">Service Saps</button>
+            <div id="serviceSaps{{service.id}}" class="collapse in col-6">
                 <ul>    
                 {% for sap in service.saps.all%}
                 <li><p>{{sap}} </p></li>
@@ -66,8 +66,8 @@
             </div>
             {% endif %}
             {% if service.sdp_bindings.all %}
-            <button type="button" class="btn btn-secondary col-3" data-toggle="collapse" data-target="#serviceSdp">Service Sdps</button>
-            <div id="serviceSdp" class="collapse in col-6">
+            <button type="button" class="btn btn-secondary col-3 btn-sm" data-toggle="collapse" data-target="#serviceSdp{{service.id}}">Service Sdps</button>
+            <div id="serviceSdp{{service.id}}" class="collapse in col-6">
                 <ul>    
                 {% for sdp in service.sdp_bindings.all%}
                 <li><p>{{sdp}} </p></li>
@@ -77,6 +77,25 @@
             {% endif %}
             </li>
             {% endfor %}
+            </ul>
+        </div>
+        <button type="button" class="btn btn-secondary col-12" data-toggle="collapse" data-target="#tunnels">Service Tunnels</button>
+        <div id="tunnels" class="collapse in col-12">
+            <ul>
+                {% for sdp in node.spds_from.all %}
+                <li><p>Service Tunnel: {{sdp}} </p>
+                {% if sdp.bindings.all %}
+                <button type="button" class="btn btn-secondary col-3 btn-sm" data-toggle="collapse" data-target="#tunnels{{ sdp.id }}">Tunnel Sdps</button>
+                <div id="tunnels{{ sdp.id }}" class="collapse in">
+                    <ul>    
+                    {% for binding in sdp.bindings.all%}
+                    <li><p>{{binding}} </p></li>
+                    {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                </li>
+                {% endfor %}
             </ul>
         </div>
       </div>
